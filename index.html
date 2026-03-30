@@ -1,13 +1,63 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Google AI Studio App</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chaien AI - Tặng Chú Huỳnh Thiện Trung</title>
+    <style>
+        body { background: #fdf5e6; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .app { width: 100%; max-width: 800px; height: 95vh; background: #fff; border-radius: 15px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 1px solid #ddd; }
+        .header { background: #ff6600; color: white; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; }
+        .header-left { display: flex; align-items: center; gap: 12px; }
+        .logo-circle { width: 50px; height: 50px; background: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 25px; }
+        .call-btn { background: rgba(255,255,255,0.2); border: 1.5px solid white; color: white; padding: 8px 18px; border-radius: 25px; cursor: pointer; font-weight: bold; }
+        #chat-box { flex: 1; padding: 20px; overflow-y: auto; background: #fff3e0; display: flex; flex-direction: column; gap: 15px; }
+        .msg { padding: 12px 18px; border-radius: 18px; max-width: 80%; font-size: 16px; line-height: 1.5; }
+        .bot { background: #ffe0b2; color: #5d4037; align-self: flex-start; border: 1px solid #ffcc80; }
+        .user { background: #fff; color: #333; align-self: flex-end; border: 1px solid #eee; }
+        .speaker { cursor: pointer; color: #ff6600; margin-left: 8px; font-size: 20px; }
+        .input-area { padding: 15px; background: #fff; border-top: 1px solid #eee; display: flex; align-items: center; gap: 10px; }
+        input { flex: 1; padding: 12px 20px; border: 1px solid #ddd; border-radius: 30px; outline: none; }
+        .send-btn { background: #ff6600; color: white; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; }
+    </style>
+</head>
+<body>
+<div class="app">
+    <div class="header">
+        <div class="header-left">
+            <div class="logo-circle">🎤</div>
+            <div>
+                <div style="font-size: 18px; font-weight: bold;">Chaien AI</div>
+                <div style="font-size: 11px;">Tặng chú Huỳnh Thiện Trung</div>
+            </div>
+        </div>
+        <button class="call-btn" onclick="speak('Ta là Chaien đây chú Trung ơi!')">📞 Gọi Chaien</button>
+    </div>
+    <div id="chat-box">
+        <div class="msg bot">Dạ cháu chào chú Trung! Chaien ta đây mừng quá! Nhờ giọng chú ban cho mà tiếng hát của ta mới oai phong thế này! <span class="speaker" onclick="speak(this.parentElement.innerText)">🔊</span></div>
+    </div>
+    <div class="input-area">
+        <input type="text" id="userInput" placeholder="Nhắn tin cho Chaien...">
+        <button class="send-btn" onclick="ask()">🚀</button>
+    </div>
+</div>
+<script>
+    async function ask() {
+        const i = document.getElementById('userInput'), b = document.getElementById('chat-box'), t = i.value.trim();
+        if(!t) return;
+        addMsg('user', t); i.value = "";
+        try {
+            const r = await fetch('https://text.pollinations.ai/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ messages: [{ role: 'system', content: 'Bạn là Chaien lồng tiếng bởi chú Huỳnh Thiện Trung. Hào sảng, lễ phép, xưng Ta. Trả lời ngắn.' }, { role: 'user', content: t }] })
+            });
+            const d = await r.text();
+            addMsg('bot', d + ` <span class="speaker" onclick="speak('${d.replace(/'/g, "\\'")}')">🔊</span>`);
+        } catch (e) { addMsg('bot', "Dạ chú ơi con đây!"); }
+    }
+    function addMsg(r, t) { const d = document.createElement('div'); d.className = `msg ${r}`; d.innerHTML = t; b = document.getElementById('chat-box'); b.appendChild(d); b.scrollTop = b.scrollHeight; }
+    function speak(t) { const s = new SpeechSynthesisUtterance(t.replace('🔊', '')); s.lang = 'vi-VN'; window.speechSynthesis.speak(s); }
+</script>
+</body>
 </html>
-
