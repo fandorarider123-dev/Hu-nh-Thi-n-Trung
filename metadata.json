@@ -1,0 +1,5 @@
+{
+  "name": "Chaien AI - Tặng Chú Trung",
+  "description": "AI Chatbot mô phỏng nhân vật Chaien, phiên bản đặc biệt tri ân nghệ sĩ lồng tiếng Huỳnh Thiện Trung.",
+  "requestFramePermissions": ["microphone"]
+}
